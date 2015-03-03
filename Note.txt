@@ -1,0 +1,21 @@
+What is LP
+Why LP
+Logic, what is it?
+Examples
+How to Run Prolo?
+
+Programs are logic formulas
+    * constant variables
+    * predicates   pserson (john) person (person)
+                                            x
+    *              For any person(x)
+    *              Exist person(x)
+    * function symbols S(0), S(S(0)), father(X)
+    * terms
+            (1) a const, a var in a term
+            (2) if f is an n-arg function symbol, and t1,...,tn are terms, then f(t1,...,tn) is a term
+            (3)...
+                * atoms P(t1,...,tn) P is a pred symbol t1,...,tn are terms
+                * connectives, and, or, not, get, For any, ther exist
+                * plus(S(0),S(S(0)),X)
+                
