@@ -19,3 +19,64 @@ Programs are logic formulas
                 * connectives, and, or, not, get, For any, ther exist
                 * plus(S(0),S(S(0)),X)
                 
+                
+* Unification Review
+* Some Builtin Predicates
+* Writing Prolog Programs
+* Trace Execution
+
+app(+L1,+L2,-L3)
+   ?L
+   
+   
+app([].,X,X).
+app([A|L1],L2,[A|R]):-
+   app(L1,L2,R).
+   
+? - app([a],[1,2],W)
+
+app(L1,L2)
+= if (null L1) then L2
+   else cons(car(L1),app(cdr(L1),L2)
+   
+?- app([a],[1,2].W)
+A is bound to a, L1 is bound to [], L2 is bound to [1,2] in this case, N|[a|R]
+A|a, L1|[],L2|[1,2]
+->app([],[1,2],R)
+X|[1,2],R|[1,2]
+
+W = [a|R1] = [a,1,2]
+
+?- app(V,W,[a,b]).
+V =[]
+W = [a,b]
+V = [a]
+W = [b]
+(in this order A:-Bl,..., Bn)
+
+
+app([],X,X).
+app([A|L1],L2,[A|R]):-app(L1,L2,R).
+?-app(V,W,[a,b])
+(For hand trace)
+V|[],X=W|[a.b]
+V |[a|L1],A|a,R|[b] (Let's rename V by v1 here, L1|V1,rename W by W1)
+Then it's gonna be app(V1,W1,[b]).
+Then V1|[],X =W2|[b] (How proog trace it? V=[a|V1] = [a], W = W1|[b] =[b] )
+
+Membership Test
+Given element E and list L
+member(+E,+L)
+Start: member(E,[]) terminate case :- fail. (Don't need to add the fail, but you can do it explicitly to make clear)
+In prolog you can write this as member(_,[]).
+Then: member(E,[E|_]).
+      member(E,[Q|L]):- E\==Q, member(E,L).
+      ?- m(a,[b,c]).
+      /E|a Q|b,L|[c]
+      m(a.[c]).
+      /...
+      m(a, []).
+      /
+      No
+rev([],[]).
+rev([A|L]):-rev(L,L1),app(L1,[A],R).
