@@ -46,3 +46,15 @@ rmDup([X],[X]).
 rmDup([X,X|Rest],Rest2) :- 
     rmDup([X|Rest],Rest2).
     rmDup([X,Y|Rest],[X|Rest2]) :- X \= Y, rmDup([Y|Rest],Rest2).
+
+
+/*
+ Question 4
+*/
+
+countAll([],_,0).
+countAll([E|Rest],E,N) :- countAll(Rest,E,N1), N is N1 + 1.
+countAll([X|Rest],E,N) :- X \= E, is_list(X),
+                          countAll(X, E, N1),
+                          countAll(Rest, E, N2), N is N1+N2.
+countAll([X|Rest],E,N) :- X \= E, not(is_list(X)), countAll(Rest, E, N).
