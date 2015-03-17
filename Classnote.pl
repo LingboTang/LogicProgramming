@@ -9,7 +9,7 @@ r(W) :- rm(a,[a,b,a,d,a,l],W).
 
 sum([],0).
 sum([A|L],S) :- number(A),sum(L,S1),S.
-sum([A|L],S) :- atom(A),sum(L,S).
+sum([A|L],S) :- atom(A),sum(L,S),!.
 sum([A|L],S) :- sum(A,S1),sum(L,S2),S.
 
 i :- consult('Classnote.pl').
