@@ -27,8 +27,9 @@ setDifference([],Y,[]).
 % Initial condition is both of the
 % sets have the same order of elements
 % or empty
-swap([X],[X]).
+
 swap([],[]).
+swap([X],[X]).
 swap([A,B|R], M) :- M=[B,A|S], swap(R,S).
 
 
@@ -38,11 +39,13 @@ swap([A,B|R], M) :- M=[B,A|S], swap(R,S).
  where L is a list of atoms and R is the same as L except duplicated elements are removed.
 */
 
-rmDup([],[]).
-rmDup([X],[X]).
-rmDup([X,X|Rest],Rest2) :- 
-    rmDup([X|Rest],Rest2).
-    rmDup([X,Y|Rest],[X|Rest2]) :- X \= Y, rmDup([Y|Rest],Rest2).
+rmDup([], []).
+rmDup([H|T],L):- member(H,T),!,rmDup(T,L).
+rmDup([H|T],[H|L]):- rmDup(T,L).
+
+rmAllDup([],[]).
+rmAllDup([H|T],L):- atomic(H),!,rmDup(T,L).
+rmAllDup([H|T],L):- \+ atomic(H),!,rmDup(H,T).
 
 
 /*
