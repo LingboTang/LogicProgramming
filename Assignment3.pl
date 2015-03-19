@@ -43,9 +43,15 @@ rmDup([], []).
 rmDup([H|T],L):- member(H,T),!,rmDup(T,L).
 rmDup([H|T],[H|L]):- rmDup(T,L).
 
-rmAllDup([],[]).
-rmAllDup([H|T],L):- atomic(H),!,rmDup(T,L).
-rmAllDup([H|T],L):- \+ atomic(H),!,rmDup(H,T).
+% rmAllDup([],[]).
+% rmAllDup([H|T],L):- atomic(H),!,rmAllDup(T,L).
+% rmAllDup([H|T],[H|L]):- rmAllDup(T,L).
+
+rmDAtom(_,[],[]).
+rmDAtom([],L,L).
+rmDAtom(A,[A|B],R) :- atomic(A),!,rmDAtom(A,[R1|R],S).
+rmDAtom([A|B],B,R) :- \+ atomic(A),!,rmDAtom(A,)
+
 
 
 /*
@@ -62,15 +68,15 @@ largest_helper([A | Rest], Out, Current) :-
 largest_helper([A | Rest], Out, Current) :- 
 	largest_helper(Rest, Out, Current).
 
-smallest([A | Rest], N) :-smallest_helper(Rest,N,A).
+smallest([A | Rest], N) :- smallest_helper(Rest, N, A).
 
-smallest_helper([],out,out).
+smallest_helper([], Out, Out).
 % if A is smaller than Current, A becomes the new Current
-smallest_helper([A | Rest],out,current) :-
-	A < Current, smallest_helper(Rest,out,A).
+smallest_helper([A | Rest], Out, Current) :- 
+	A < Current, smallest_helper(Rest, Out, A).
 % otherwise Current remains the same
-smallest_helper([A | Rest], out, current) :-
-	smallest_helper(Rest,out,current).
+smallest_helper([A | Rest], Out, Current) :- 
+	smallest_helper(Rest, Out, Current).
 
 
 
