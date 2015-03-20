@@ -43,18 +43,7 @@ rmDup([], []).
 rmDup([H|T],L):- member(H,T),!,rmDup(T,L).
 rmDup([H|T],[H|L]):- rmDup(T,L).
 
-% rmAllDup([],[]).
-% rmAllDup([H|T],L):- atomic(H),!,rmAllDup(T,L).
-% rmAllDup([H|T],[H|L]):- rmAllDup(T,L).
 
-% rmDAtom(_,[],[]).
-% rmDAtom([],L,L).
-% rmDAtom(A,[A|B],R) :- atomic(A),!,rmDAtom(A,[A|B],[A|R]).
-% rmDAtom(A,[A|B],[A|R]) :- rmDAtom([A|B],[A|B],[A|R]).
-
-rmDAtom(_,[],[]).
-rmDAtom([],L,L).
-rmDAtom(A,[B|T],R) :- atomic(A),!,rmDAtom(B,T,R),append(A,T,R).
 
 /*
  Question 4
