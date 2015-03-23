@@ -137,3 +137,16 @@ my_reverse([H|T],L):- my_reverse(T,R),append(R,[H],L).
  Question 6
 */
 
+convert(L,R) :- convert_pre(L,0,K),flat(K,R).
+
+convert_pre([],0,[]).
+convert_pre(L,N,K) :- \+member(q,L),N == 0, removeE(L,K).
+convert_pre(L,N,L) :- \+member(q,L),N == 1.
+convert_pre(L,N,[K,q|R]) :- append(L1,[q|L2],L), N == 0, removeE(L1,K),convert_pre(L2,1,R).
+convert_pre(L,N,[L1,q|R]) :- append(L1,[q|L2],L), N == 1,convert_pre(L2,0,R).
+
+
+
+removeE([],[]).
+removeE([H|T],R) :- H==e,removeE(T,R).
+removeE([H|T],[C|R]) :- C = c,removeE(T,R).
