@@ -16,21 +16,23 @@
 
 % Base case.
 
-setDifference([],Y,[]).
+setDifference([],B,[]).
 
-% When X is in Y, remove it from the first list.
+% When A is in B, remove it from the first list.
 
-setDifference([X|R],Y,Z) :- check_in(X,Y),setDifference(R,Y,Z).
+% You can ignore the cut off,but it is safe
 
-% Then, run the recursion if X is not in Y
+setDifference([A|R],B,C) :- check_in(A,B),!,setDifference(R,B,C).
 
-setDifference([X|R],Y,[X|Z]) :- setDifference(R,Y,Z).
+% Then, run the recursion if A is not in B
 
-% Check if the X is in the T, actually it is a built-in function
+setDifference([A|R],B,[A|C]) :- setDifference(R,B,C).
+
+% Check if the A is in the B, actually it is a built-in function
 % But I do not know if we can use it directly.
 
-check_in(X,[X|_]).
-check_in(X,[_|T]):- member(X,T).
+check_in(A,[A|_]).
+check_in(A,[_|B]):- member(A,B).
 
 /*----------------------------------------------------------------
  Question 2
@@ -49,7 +51,7 @@ check_in(X,[_|T]):- member(X,T).
 
 swap([],[]).
 swap([X],[X]).
-swap([A,B|R], M) :- M=[B,A|S], swap(R,S).
+swap([A,B|R], M) :- M=[B,A|S],swap(R,S).
 
 
 /*--------------------------------------------------------------
@@ -65,10 +67,10 @@ swap([A,B|R], M) :- M=[B,A|S], swap(R,S).
 rmDup([], []).
 
 % If first element is in the rest of the list, remove it.
-rmDup([H|T],L) :- check_in(H,T),rmDup(T,L).
+rmDup([A|B],L) :- check_in(A,B),!,rmDup(B,L).
 
 % If not, check the second element.
-rmDup([H|T],[H|L]) :- rmDup(T,L).
+rmDup([A|B],[A|L]) :- rmDup(B,L).
 
 
 /*--------------------------------------------------------------
@@ -107,7 +109,13 @@ getridDup([A|L],M,R) :- \+ is_list(A), getridDup(L,M,R).
 % result in to the original list, this can hold the initial position and intial level of nest.
 % This is the most difficult part.
 
-getridDup([A|L],M,[B|R]) :- is_list(A), getridDup(A,M,B),flat(A,K),append(K,M,G), getridDup(L,G,R).
+getridDup([A|L],M,[B|R]) :- is_list(A), getridDup(A,M,B),hold_order(A,M,G), getridDup(L,G,R).
+
+
+hold_order([],L,[]).
+hold_order(A,M,G) :- flat(A,K),append(K,M,G).
+
+
 
 % flat (L, L1): flatten a list f atoms (atoms and numbers) L to
 % a flat list L
