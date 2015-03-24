@@ -65,7 +65,7 @@ swap([A,B|R], M) :- M=[B,A|S], swap(R,S).
 rmDup([], []).
 
 % If first element is in the rest of the list, remove it.
-rmDup([H|T],L) :- member(H,T),rmDup(T,L).
+rmDup([H|T],L) :- check_in(H,T),rmDup(T,L).
 
 % If not, check the second element.
 rmDup([H|T],[H|L]) :- rmDup(T,L).
@@ -86,10 +86,28 @@ rmDup([H|T],[H|L]) :- rmDup(T,L).
 
 rmAllDup(L,R) :- getridDup(L,[],R).
 
+% Actually this is the hardest question, so I would like to explain clear.
+% Base case is, given any of the atom we want to rm duplicates, empty list
+% will always give nothing.
+
 getridDup([],_,[]).
+
+% If A is not a list, great, we can check if it is inside the rest of the list.
+% and replace A by the second car of the cdr list. M is the rest of the list.
+% [A|M] will check all A in M recursively.
+
 getridDup([A|L],M,[A|R]) :- \+ is_list(A), \+ check_in(A,M), getridDup(L,[A|M],R).
-getridDup([A|L],M,R) :- \+ is_list(A),check_in(A,M),getridDup(L,M,R).
-getridDup([A|L],M,[B|R]) :- is_list(A), getridDup(A,M,B), flat(A,FA),append(FA,M,S1), getridDup(L,S1,R). 
+
+% If A is not a list, but still not inside the rest of the list, we want to find the
+% next atom we want to remove the dup.
+
+getridDup([A|L],M,R) :- \+ is_list(A), getridDup(L,M,R).
+
+% If A is a list, we want to remove the "list A" at first, and then append the flattened
+% result in to the original list, this can hold the initial position and intial level of nest.
+% This is the most difficult part.
+
+getridDup([A|L],M,[B|R]) :- is_list(A), getridDup(A,M,B),flat(A,K),append(K,M,G), getridDup(L,G,R).
 
 % flat (L, L1): flatten a list f atoms (atoms and numbers) L to
 % a flat list L
