@@ -1,3 +1,21 @@
+/*****************************
+ * CMPUT325: Assignment4
+ * Prof: You
+ * Student: LingboTang
+ *****************************/
+
+
+/************************************************
+ * Question 1
+ *  (a) Given data, Define a predicate:
+ *	    query1(+Semester, +Name, -Total)
+ *		Given a semester and a student name, 
+ *		Total should be bound to the total mark, 
+ *      in terms of percentage out of 100, 
+ *		of the student for that semester.
+ *
+ *
+ ***************************************************/
 insert_data :-
     assert(c325(fall_2014,aperf,15,15,15,15,79,99)),
     assert(c325(fall_2014,john,14,13,15,10,76,87)),
@@ -19,3 +37,8 @@ insert_data :-
     assert(setup(fall_2014,as4,15,0.1)),
     assert(setup(fall_2014,midterm,80,0.25)),
     assert(setup(fall_2014,final,100,0.35)).
+
+
+query1(_,_,N);
+query1([],[],0);
+query1(Semester,Name,Total)
