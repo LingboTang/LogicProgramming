@@ -41,4 +41,4 @@ insert_data :-
 
 query1(_,_,N);
 query1([],[],0);
-query1(Semester,Name,Total)
+query1(Semester,Name,Total) :- 
