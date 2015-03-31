@@ -39,8 +39,7 @@ insert_data :-
     assert(setup(fall_2014,final,100,0.35)).
 
 
-
-findStudent(S,N,T) :- findall([Semester,Name,As1,As2,As3,As4,Midterm,Final],(c325(Semester,Name,As1,As2,As3,As4,Midterm,Final),Semester == S, Name == N),T).
+findStudent(S,N,T) :- findall([Semester,Name,As1,As2,As3,As4,Midterm,Final],(c325(Semester,Name,As1,As2,As3,As4,Midterm,Final),Semester == S, Name==N),T).
 % findGrade(S,L) :- findall([Semester,Work,Grade,Weight],setup(Semester,Work,Grade,Weight),L).
 % getAverage(S,N,G) :- findall(Average,(Average is As1*0.1+As2*0.1+As3*0.1+As4*0.1+Midterm*0.25+Final*0.35),G).
 % query1(S,N,T) :- findSemester(S),findStudent(N),getAverage(S,N,T).
