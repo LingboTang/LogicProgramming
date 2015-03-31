@@ -38,7 +38,7 @@ insert_data :-
     assert(setup(fall_2014,midterm,80,0.25)),
     assert(setup(fall_2014,final,100,0.35)).
 
-query1(Semester, Name, Total):- c325(Semester,Name,As1,As2,As3,As4,Mid,Final),setup(Semester,as1,Grade1,Weight1),setup(Semester,as2,Grade2,Weight2),setup(Semester,as3,Grade3,Weight3),setup(Semester,as4,Grade4,Weight4),setup(Semester,midterm,Grade5,Weight5),setup(Semester,final,Grade6,Weight6), Total is 100*(As1/Grade1*Weight1+As2/Grade2*Weight2+As3/Grade3*Weight3+As4/Grade4*Weight4+Mid/Grade5*Weight5+Final/Grade6*Weight6),!.
+query1(Semester, Name, Total):- insert_data, c325(Semester,Name,As1,As2,As3,As4,Mid,Final),setup(Semester,as1,Grade1,Weight1),setup(Semester,as2,Grade2,Weight2),setup(Semester,as3,Grade3,Weight3),setup(Semester,as4,Grade4,Weight4),setup(Semester,midterm,Grade5,Weight5),setup(Semester,final,Grade6,Weight6), Total is 100*(As1/Grade1*Weight1+As2/Grade2*Weight2+As3/Grade3*Weight3+As4/Grade4*Weight4+Mid/Grade5*Weight5+Final/Grade6*Weight6),!.
 
 /*****************************************************************************
  * Question 1 
@@ -48,5 +48,10 @@ query1(Semester, Name, Total):- c325(Semester,Name,As1,As2,As3,As4,Mid,Final),se
  *	an improvement over the midterm, in the sense that the percentage 
  *	obtained from the final is (strictly) better than that of the midterm.
  *****************************************************************************/
- 
+	
+
+query2(Semester, L) :-insert_data, c325(Semester,L,As1,As2,As3,As4,Mid,Final),
+	setup(Semester,midterm,Grade5,Weight5),
+	setup(Semester,final,Grade6,Weight6), 
+	Mid/Grade5>Final/Grade6,!.
 
