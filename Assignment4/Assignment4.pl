@@ -1,11 +1,11 @@
-/*****************************
+/********************************************************
  * CMPUT325: Assignment4
  * Prof: You
  * Student: LingboTang
- *****************************/
+ ********************************************************/
 
 
-/************************************************
+/********************************************************
  * Question 1
  *  (a) Given data, Define a predicate:
  *	    query1(+Semester, +Name, -Total)
@@ -15,7 +15,7 @@
  *		of the student for that semester.
  *
  *
- ***************************************************/
+ ********************************************************/
 insert_data :-
     assert(c325(fall_2014,aperf,15,15,15,15,79,99)),
     assert(c325(fall_2014,john,14,13,15,10,76,87)),
@@ -39,6 +39,8 @@ insert_data :-
     assert(setup(fall_2014,final,100,0.35)).
 
 
-query1(_,_,N);
-query1([],[],0);
-query1(Semester,Name,Total) :- 
+findSemester(S,L) :- findall(Semester,(Semester == S),L).
+findStudent(N,I) :- findall(Name,(Name ==N),I).
+getAverage(S,N,G) :- findall(Average,(Average is As1*0.1+As2*0.1+As3*0.1+As4*0.1+Midterm*0.25+Final*0.35),G).
+
+query1(S,N,T) :- findSemester(S),findStudent(N),getAverage(S,N,T).
