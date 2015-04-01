@@ -63,3 +63,18 @@ query2(Semester, L) :-insert_data,findall(Name, (c325(Semester,Name,As1,As2,As3,
 	setup(Semester,final,Grade6,Weight6), 
 	Final/Grade6>Mid/Grade5),L),!.
 
+/*************************************************************************************
+ * Question 1
+ *   (c)Define a predicate:
+ *	query3(+Semester,+Name,+Type,+NewMark)
+ *	Updates the record of Name for Semester where Type gets NewMark. 
+ *	If the record is not in the database, print the message "record not found".
+ *************************************************************************************/
+
+queryme(S,N,L) :- insert_data, findall(Name,(c325(Semester,Name,As1,As2,As3,As4,Mid,Final),Name== N),L),!.
+
+
+query3(S,N,Type,NewMark) :-
+	queryme(S,N,L),member(N,L),c325(Semester,Name,As1,As2,As3,As4,Mid,Final),Type = NewMark,!.
+query3(S,N,Type,NewMark) :- 
+	queryme(S,N,L),\+ member(N,L),c325(Semester,Name,As1,As2,As3,As4,Mid,Final),Type = record not found,!.
