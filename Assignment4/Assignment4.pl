@@ -38,7 +38,9 @@ insert_data :-
     assert(setup(fall_2014,midterm,80,0.25)),
     assert(setup(fall_2014,final,100,0.35)).
 
-query1(Semester, Name, Total):- insert_data, 
+
+
+query1(Semester, Name, Total):-
 	c325(Semester,Name,As1,As2,As3,As4,Mid,Final),
 	setup(Semester,as1,Grade1,Weight1),
 	setup(Semester,as2,Grade2,Weight2),
@@ -58,7 +60,7 @@ query1(Semester, Name, Total):- insert_data,
  *****************************************************************************/
 	
 
-query2(Semester, L) :-insert_data,findall(Name, (c325(Semester,Name,As1,As2,As3,As4,Mid,Final),
+query2(Semester, L) :-findall(Name, (c325(Semester,Name,As1,As2,As3,As4,Mid,Final),
 	setup(Semester,midterm,Grade5,Weight5),
 	setup(Semester,final,Grade6,Weight6), 
 	Final/Grade6>Mid/Grade5),L),!.
@@ -73,7 +75,7 @@ query2(Semester, L) :-insert_data,findall(Name, (c325(Semester,Name,As1,As2,As3,
 
 
 
-queryme(S,N,L) :- insert_data, 
+queryme(S,N,L) :-  
 	findall(Name,(c325(Semester,Name,As1,As2,As3,As4,Mid,Final),Semester== S,Name== N),L),!.
 
 
