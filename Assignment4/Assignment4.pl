@@ -50,8 +50,7 @@ query1(Semester, Name, Total):- insert_data, c325(Semester,Name,As1,As2,As3,As4,
  *****************************************************************************/
 	
 
-query2(Semester, L) :-insert_data, c325(Semester,L,As1,As2,As3,As4,Mid,Final),
+query2(Semester, L) :-insert_data,findall(Name, (c325(Semester,Name,As1,As2,As3,As4,Mid,Final),
 	setup(Semester,midterm,Grade5,Weight5),
 	setup(Semester,final,Grade6,Weight6), 
-	Mid/Grade5>Final/Grade6,!.
-
+	Final/Grade6>Mid/Grade5),L),!.
