@@ -38,7 +38,15 @@ insert_data :-
     assert(setup(fall_2014,midterm,80,0.25)),
     assert(setup(fall_2014,final,100,0.35)).
 
-query1(Semester, Name, Total):- insert_data, c325(Semester,Name,As1,As2,As3,As4,Mid,Final),setup(Semester,as1,Grade1,Weight1),setup(Semester,as2,Grade2,Weight2),setup(Semester,as3,Grade3,Weight3),setup(Semester,as4,Grade4,Weight4),setup(Semester,midterm,Grade5,Weight5),setup(Semester,final,Grade6,Weight6), Total is 100*(As1/Grade1*Weight1+As2/Grade2*Weight2+As3/Grade3*Weight3+As4/Grade4*Weight4+Mid/Grade5*Weight5+Final/Grade6*Weight6),!.
+query1(Semester, Name, Total):- insert_data, 
+	c325(Semester,Name,As1,As2,As3,As4,Mid,Final),
+	setup(Semester,as1,Grade1,Weight1),
+	setup(Semester,as2,Grade2,Weight2),
+	setup(Semester,as3,Grade3,Weight3),
+	setup(Semester,as4,Grade4,Weight4),
+	setup(Semester,midterm,Grade5,Weight5),
+	setup(Semester,final,Grade6,Weight6), 
+	Total is 100*(As1/Grade1*Weight1+As2/Grade2*Weight2+As3/Grade3*Weight3+As4/Grade4*Weight4+Mid/Grade5*Weight5+Final/Grade6*Weight6),!.
 
 /*****************************************************************************
  * Question 1 
@@ -54,3 +62,4 @@ query2(Semester, L) :-insert_data,findall(Name, (c325(Semester,Name,As1,As2,As3,
 	setup(Semester,midterm,Grade5,Weight5),
 	setup(Semester,final,Grade6,Weight6), 
 	Final/Grade6>Mid/Grade5),L),!.
+
