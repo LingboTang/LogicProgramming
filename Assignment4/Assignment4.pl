@@ -139,6 +139,28 @@ query3(S,N,Type,NewMark) :-
  *	 RmLst = [......]
  ******************************************************************************************/
 
+ schedule(TimeLst,RmLst) :-             % TimeLst as times assigned to sessions a, b, c, ...
+ TimeLst = [A,B,C,D,E,F,G,H,I,J,K],     % RmLst as rooms assigned to sessions a, b, c, ...
+ length(TimeLst,Len),
+ length(RmLst,Len),                     % generate RmLst
+ append(TimeLst,RmLst, W),              % will label all variables in W
+ findall(L, notAtSameTime(L), C1),      % collect all such L into C1
+ findall([Q1,Q2],before(Q1,Q2),C2),     % collect all before constraints into C2
+ findall([Session,Time,Rm],at(Session,Time,Rm), C3),  
+                                        %collect all "at constraints" into C3
+ ......
+ domain(TimeLst, 1,4) ,  % let's denote 1 for firstDayAm, 2 for firstDayPm, and so on
+ domain(RmLst, 10, ...), % let's represent room r1 by 10, r2 by 11, and so on to avoid                         % mixing up with the representation of the half-days. 
+                         % You should determine what ... is 
+ ......
+ constr1(TimeLst,C1),          % satisfy all "notAtSameTime constraints"
+ constr2(TimeLst,C2),          % satisfy all "before constraints"
+ constr3(TimeLst,RmLst,C3),    % satisfy all "at constraints"
+ exclusive(TimeLst,RmLst),   
+            % No sessions assigned to the same time can be in the same room
+ ......     % No sessions assigned to the same room can be at the same time
+ 
 
+ labeling([],W).
 
 
