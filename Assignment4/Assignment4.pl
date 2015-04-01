@@ -71,10 +71,72 @@ query2(Semester, L) :-insert_data,findall(Name, (c325(Semester,Name,As1,As2,As3,
  *	If the record is not in the database, print the message "record not found".
  *************************************************************************************/
 
-queryme(S,N,L) :- insert_data, findall(Name,(c325(Semester,Name,As1,As2,As3,As4,Mid,Final),Name== N),L),!.
+
+
+queryme(S,N,L) :- insert_data, 
+	findall(Name,(c325(Semester,Name,As1,As2,As3,As4,Mid,Final),Semester== S,Name== N),L),!.
 
 
 query3(S,N,Type,NewMark) :-
-	queryme(S,N,L),member(N,L),c325(Semester,Name,As1,As2,As3,As4,Mid,Final),Type = NewMark,!.
+	Type==as1,retract(c325(S,N,_,As2,As3,As4,Mid,Final)),!,assert(c325(S,N,NewMark,As2,As3,As4,Mid,Final)).
+query3(S,N,Type,NewMark) :-
+	Type==as2,retract(c325(S,N,As1,_,As3,As4,Mid,Final)),!,assert(c325(S,N,As1,NewMark,As3,As4,Mid,Final)).
+query3(S,N,Type,NewMark) :-
+	Type==as3,retract(c325(S,N,As1,As2,_,As4,Mid,Final)),!,assert(c325(S,N,As1,As2,NewMark,As4,Mid,Final)).
+query3(S,N,Type,NewMark) :-
+	Type==as4,retract(c325(S,N,As1,As2,As3,_,Mid,Final)),!,assert(c325(S,N,As1,As2,As3,NewMark,Mid,Final)).
+query3(S,N,Type,NewMark) :-
+	Type==midterm,retract(c325(S,N,As1,As2,As3,As4,_,Final)),!,assert(c325(S,N,As1,As2,As3,As4,NewMark,Final)).
+query3(S,N,Type,NewMark) :-
+	Type==final,retract(c325(S,N,As1,As2,As3,As4,Mid,_)),!,assert(c325(S,N,As1,As2,As3,As4,Mid,NewMark)).
 query3(S,N,Type,NewMark) :- 
-	queryme(S,N,L),\+ member(N,L),c325(Semester,Name,As1,As2,As3,As4,Mid,Final),Type = record not found,!.
+	queryme(S,N,L),\+ member(N,L),write('record_not_found'),!.
+
+/*************************************************************************************
+ * Question 2
+ *	 The organizers of a workshop need to book a number of rooms, 
+ *	 which can be given by facts like
+ *
+ *	 room(r1).
+ *
+ *	 room(r2).
+ *
+ *	 .......
+ *
+ *	 for a 2 days workshop, which consists of 11 half-day sessions.  
+ *	 Let us name the sessions by a,b,..., k, 
+ *	 and the half-days by firstDayAm, firstDayPm, secondDayAm, and secondDayPm. 
+ *	 In scheduling the workshop, some constraints must be satisfied.  
+ *	 Some sessions cannot be held at the same time. This is given by facts like
+ *	 notAtSameTime([b,i,h,g]) .meaning that no sessions in [b,i,h,g] may be held 
+ *	 at the same time. A session may need to take place before another session, 
+ *	 given by facts like before(i,j).meaning that i should precede j. A session may 
+ *	 need to be placed at a particular time and/or in a particular room; the 
+ *	 information is given by, e.g.,
+ *
+ *       at(a,firstDayPm,_).
+ *
+ *	 which means that the session a must take place at firstDayPm, in any room.
+ *
+ *	 Write a program, such that given a collection of facts like above,  
+ *	 and a number of rooms as described at the beiginning, your program generates 
+ *	 all solutions (one at a time), and if a solution exists, otherwise the message 
+ *	 "cannot be scheduled" should be shown.We can use a list of variables [A,B,C,...]
+ *	 to represent sessions, where two pieces of information are associated with each 
+ *	 session, time and place. The representation of a solution is simpler if we use 
+ *	 two lists of variables, one for times and the other for rooms. Then, we write 
+ *	 constraints that must be satisfied, w.r.t. one of these lists, or both, depending 
+ *	 on the constraint.
+ *
+ *	 Your program will be invoked by a call
+ *
+ *	 ?- schedule(TimeLst, RmLst).
+ *
+ *	 TimeLst = [......]
+ *
+ *	 RmLst = [......]
+ ******************************************************************************************/
+
+
+
+
