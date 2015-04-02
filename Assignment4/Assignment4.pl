@@ -91,9 +91,52 @@ query3(S,N,Type,NewMark) :-
 	write('record not found'),!.
 
 
-/************************************************
+/*************************************************************************************
  * Question 2
- ************************************************/
+ *	 The organizers of a workshop need to book a number of rooms, 
+ *	 which can be given by facts like
+ *
+ *	 room(r1).
+ *
+ *	 room(r2).
+ *
+ *	 .......
+ *
+ *	 for a 2 days workshop, which consists of 11 half-day sessions.  
+ *	 Let us name the sessions by a,b,..., k, 
+ *	 and the half-days by firstDayAm, firstDayPm, secondDayAm, and secondDayPm. 
+ *	 In scheduling the workshop, some constraints must be satisfied.  
+ *	 Some sessions cannot be held at the same time. This is given by facts like
+ *	 notAtSameTime([b,i,h,g]) .meaning that no sessions in [b,i,h,g] may be held 
+ *	 at the same time. A session may need to take place before another session, 
+ *	 given by facts like before(i,j).meaning that i should precede j. A session may 
+ *	 need to be placed at a particular time and/or in a particular room; the 
+ *	 information is given by, e.g.,
+ *
+ *       at(a,firstDayPm,_).
+ *
+ *	 which means that the session a must take place at firstDayPm, in any room.
+ *
+ *	 Write a program, such that given a collection of facts like above,  
+ *	 and a number of rooms as described at the beiginning, your program generates 
+ *	 all solutions (one at a time), and if a solution exists, otherwise the message 
+ *	 "cannot be scheduled" should be shown.We can use a list of variables [A,B,C,...]
+ *	 to represent sessions, where two pieces of information are associated with each 
+ *	 session, time and place. The representation of a solution is simpler if we use 
+ *	 two lists of variables, one for times and the other for rooms. Then, we write 
+ *	 constraints that must be satisfied, w.r.t. one of these lists, or both, depending 
+ *	 on the constraint.
+ *
+ *	 Your program will be invoked by a call
+ *
+ *
+ *	 ?- schedule(TimeLst, RmLst).
+ *
+ *	 TimeLst = [......]
+ *
+ *	 RmLst = [......]
+ ******************************************************************************************/
+
 % all_distinct() to check the list.
 
 
@@ -105,26 +148,32 @@ room(r1).
 room(r2).
 room(r3).
 
+notAtSameTime(L) :- is_list(L), member([L]).
+before(I,J) :- I<J.
+at(A,_,R) :- [A,_,R].
 
+getRoom(Room,RmList) :- findall(Room,(room(Room)),RmList).
 
 schedule(TimeLst,RmLst) :- TimeLst = [A,B,C,D,E,F,G,H,I,J,K],length(TimeLst,Len),length(RmLst,Len),                     
-append(TimeLst,RmLst, W),             
+append(TimeLst,RmLst, W).             
 findall(L, notAtSameTime(L), C1),     
 findall([Q1,Q2],before(Q1,Q2),C2),     
-findall([Session,Time,Rm],at(Session,Time,Rm), C3), 
+findall([Session,Time,Rm],at(Session,Time,Rm), C3). 
 % Add something 
-domain(TimeLst, 1,4),  
-domain(RmLst, 10, 11),
+% domain(TimeLst, 1,4),  
+% domain(RmLst, 10, 11),
 % Add something
-constr1(TimeLst,C1),         
-constr2(TimeLst,C2),          
-constr3(TimeLst,RmLst,C3),    
-exclusive(TimeLst,RmLst),
+% constr1(TimeLst,C1),         
+% constr2(TimeLst,C2),          
+% constr3(TimeLst,RmLst,C3),    
+% exclusive(TimeLst,RmLst),
 % Add something   
-labeling([],W),
+% labeling([],W),
 
-List = [a,b,c,d,e,f,g,h,i,j,k],
-myPrint(TimeLst,RmLst,List).
+% List = [a,b,c,d,e,f,g,h,i,j,k],
+% myPrint(TimeLst,RmLst,List).
+
+
 myPrint([],[],[]).
 myPrint([T|L],[W|R],[List|Rest]):-
 write('session '), write(List), write(' at time '),
@@ -132,7 +181,14 @@ write(T), write(' in room '),
 write(W), write('\n'),
 myPrint(L,R,Rest).
 
-
+% constr1(TimeLst,C1) :-
+%	length(TimeLst,Len).
+%	C1 = length(X,Len).
+%	TimeLst #member(notAtSameTime).
+%	labeling([],C1).
+	
+	
+	
 
 
 /****************************************************************************
