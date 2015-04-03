@@ -181,14 +181,24 @@ write(T), write(' in room '),
 write(W), write('\n'),
 myPrint(L,R,Rest).
 
-% constr1(TimeLst,C1) :-
-%	length(TimeLst,Len).
-%	C1 = length(X,Len).
-%	TimeLst #member(notAtSameTime).
-%	labeling([],C1).
+constr1(TimeLst,C1) :-
+	length(TimeLst,Len),
+	C1 = length(X,Len),
+	TimeLst #member(notAtSameTime),
+	labeling([],C1).
 	
-	
-	
+constr2(TimeLst,C2) :-
+	length(TimeLst,Len),
+	C2 = length(X,Len),
+	TimeLst #before(I,J),	
+	labeling([],C2).
+
+constr3(TimeLst,RmLst,C3) :-
+	length(TimeLst ,Len),
+	C3 = length(X,Len),
+	TimeLst #member(TimeLst),
+	RmLst #member(RmLst),
+	labeling([],C3).
 
 
 /****************************************************************************
