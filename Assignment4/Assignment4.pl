@@ -210,4 +210,42 @@ constr3(TimeLst,RmLst,C3) :-
  *	sum is zero, if such a query is answered positively. Your program should 
  *	provide all such subsets when user asks for alternative answers.
  ***************************************************************************/
+domains
+        list=integer*
+        clist=list*
+predicates
+        sum(list,integer)
+        check(clist,clist,integer)
+        gensub(list,list)
+        getsub(list,clist,integer)
+clauses
+        %gets all possible subsets with gensub and findall, binds them to
+        %and then checks the subsets to see if the elements add up to S
+        %and adds the correct ones to Rez.
+        %Goal example: getsub([1,2,5,6],X,7)
+        getsub([], [], _).
+        getsub(L, Rez, S):-
+                findall(LR, gensub(L,LR), X),
+                check(X, Rez, S).
 
+        %generates all possible subsets of the given set
+        gensub([], []).
+        gensub([E|Tail], [E|NTail]):-
+                gensub(Tail, NTail).
+        gensub([_|Tail], NTail):-
+                gensub(Tail, NTail).
+
+        % sum elements of a list
+	sum([], 0).
+	sum([H|T], S):-
+    		sum(T, N),
+    		S is N+H.
+
+        %checks if each sublist of a given list of lists, has the sum of elements S
+	check([], [], _).
+	%the LR variable here gives a warning after entering the goal
+	check([H|T], [H|LR], S):-
+		sum(H, S),
+    		!, check(T, LR, S).
+	check([_|T], LR, S):-
+    		check(T, LR, S).
