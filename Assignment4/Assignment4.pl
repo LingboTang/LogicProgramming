@@ -157,21 +157,21 @@ getRoom(Room,RmList) :- findall(Room,(room(Room)),RmList).
 schedule(TimeLst,RmLst) :- TimeLst = [A,B,C,D,E,F,G,H,I,J,K],length(TimeLst,Len),length(RmLst,Len),                     
 append(TimeLst,RmLst, W).             
 findall(L, notAtSameTime(L), C1),     
-findall([Q1,Q2],before(Q1,Q2),C2),     
-findall([Session,Time,Rm],at(Session,Time,Rm), C3). 
+%findall([Q1,Q2],before(Q1,Q2),C2),     
+%findall([Session,Time,Rm],at(Session,Time,Rm), C3). 
 % Add something 
-% domain(TimeLst, 1,4),  
-% domain(RmLst, 10, 11),
+domain(TimeLst, 1,4),  
+domain(RmLst, 10, 11),
 % Add something
-% constr1(TimeLst,C1),         
+constr1(TimeLst,C1),         
 % constr2(TimeLst,C2),          
 % constr3(TimeLst,RmLst,C3),    
 % exclusive(TimeLst,RmLst),
 % Add something   
-% labeling([],W),
+labeling([],W),
 
-% List = [a,b,c,d,e,f,g,h,i,j,k],
-% myPrint(TimeLst,RmLst,List).
+List = [a,b,c,d,e,f,g,h,i,j,k],
+myPrint(TimeLst,RmLst,List).
 
 
 myPrint([],[],[]).
@@ -182,12 +182,11 @@ write(W), write('\n'),
 myPrint(L,R,Rest).
 
 constr1(TimeLst,C1) :-
-	length(TimeLst,Len),
-	C1 = length(X,Len),
-	TimeLst #member(notAtSameTime),
+	C1 = [A,B,C,D,E,F,G,H,I,J,K],
+	
 	labeling([],C1).
 	
-constr2(TimeLst,C2) :-
+/*constr2(TimeLst,C2) :-
 	length(TimeLst,Len),
 	C2 = length(X,Len),
 	TimeLst #before(I,J),	
@@ -198,7 +197,7 @@ constr3(TimeLst,RmLst,C3) :-
 	C3 = length(X,Len),
 	TimeLst #member(TimeLst),
 	RmLst #member(RmLst),
-	labeling([],C3).
+	labeling([],C3). */
 
 
 /****************************************************************************
