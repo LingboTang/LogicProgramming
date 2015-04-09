@@ -137,8 +137,6 @@ query3(S,N,Type,NewMark) :-
  *	 RmLst = [......]
  ******************************************************************************************/
 
-% all_distinct() to check the list.
-
 
 room(r1).
 room(r2).
@@ -147,7 +145,7 @@ notAtSameTime([b,i,h,g]).
 before(i,j).
 at(a,_,r2).
 
-getRoom(Room,RmList) :- findall(Room,(room(Room)),RmList)
+getRoom(Room,RmList) :- findall(Room,(room(Room)),RmList).
 
 
 timePartition(firstDayAm,1).
@@ -155,51 +153,52 @@ timePartition(firstDayPm,2).
 timePartition(secondDayAm,3).
 timePartition(secondDayPm,4).
 
+sessionList(a,1).
+sessionList(b,2).
+sessionList(c,3).
+sessionList(d,4).
+sessionList(e,5).
+sessionList(f,6).
+sessionList(g,7).
+sessionList(h,8).
+sessionList(i,9).
+sessionList(j,10).
+sessionList(k,11).
 
-schedule(TimeLst,RmLst) :- TimeLst = [A,B,C,D,E,F,G,H,I,J,K],length(TimeLst,Len),length(RmLst,Len),                     
-append(TimeLst,RmLst, W).             
-findall(L, notAtSameTime(L), C1),     
-%findall([Q1,Q2],before(Q1,Q2),C2),     
-%findall([Session,Time,Rm],at(Session,Time,Rm), C3).  
-domain(TimeLst, 1,4),
-getRoom(Room,RmList),
-length(RmList,Lenm),  
-domain(RmLst,10,10+Lenm),
-domain(SessionLst,1,11),
-constr1(TimeLst,C1),         
+
+% schedule(TimeLst,RmLst) :- TimeLst = [A,B,C,D,E,F,G,H,I,J,K],length(TimeLst,Len),length(RmLst,Len),                     
+% append(TimeLst,RmLst, W).             
+% findall(L, notAtSameTime(L), C1),     
+% findall([Q1,Q2],before(Q1,Q2),C2),     
+% findall([Session,Time,Rm],at(Session,Time,Rm), C3).  
+% domain(TimeLst, 1,4),
+% getRoom(Room,RmList),
+% length(RmList,Lenm),  
+% domain(RmLst,10,10+Lenm),
+% constr1(TimeLst,C1),         
 % constr2(TimeLst,C2),          
 % constr3(TimeLst,RmLst,C3),    
 % exclusive(TimeLst,RmLst),
 % Add something   
-labeling([],W).
+% labeling([],W).
 
-%List = [a,b,c,d,e,f,g,h,i,j,k],
-%myPrint(TimeLst,RmLst,List).
-
-
-
-myPrint([],[],[]).
-myPrint([T|L],[W|R],[List|Rest]):-
-write('session '), write(List), write(' at time '),
-write(T), write(' in room '),
-write(W), write('\n'),
-myPrint(L,R,Rest).
-
-sessionmap(Session,Num).
-
-% Function to map
+% List = [a,b,c,d,e,f,g,h,i,j,k],
+% myPrint(TimeLst,RmLst,List).
 
 
 
+% myPrint([],[],[]).
+% myPrint([T|L],[W|R],[List|Rest]):-
+% write('session '), write(List), write(' at time '),
+% write(T), write(' in room '),
+% write(W), write('\n'),
+% myPrint(L,R,Rest).
 
-% Function to compare
 
-
-constr1(TimeLst,C1) :-
-	Session = [A,B,C,D,E,F,G,H,I,J,K],
-	
-	all_distinct(C1),		
-	labeling([],C1).
+% constr1(TimeLst,C1) :-
+%	findall([Session,Num],(sessionList(Session,Num),member(Session,C1)),L),
+%	findall(Time,(timePartition(Daytime,Time),all_distinct(TimeLst)),L2),
+%	labeling([],C1).
 	
 /*constr2(TimeLst,C2) :-
 	length(TimeLst,Len),
@@ -226,42 +225,23 @@ constr3(TimeLst,RmLst,C3) :-
  ***************************************************************************/
 
 
-/*domains
-        list=integer*
-        clist=list*
-predicates
-        sum(list,integer)
-        check(clist,clist,integer)
-        gensub(list,list)
-        getsub(list,clist,integer)
-clauses
-        %gets all possible subsets with gensub and findall, binds them to
-        %and then checks the subsets to see if the elements add up to S
-        %and adds the correct ones to Rez.
-        %Goal example: getsub([1,2,5,6],X,7)
-        getsub([], [], _).
-        getsub(L, Rez, S):-
-                findall(LR, gensub(L,LR), X),
-                check(X, Rez, S).
+% subset(X, Y) :- Y is a subset of X
+subset([], []).
+subset([H|T1], [H|T2]) :- subset(T1, T2).
+subset([_|T],L) :- subset(T, L).
 
-        %generates all possible subsets of the given set
-        gensub([], []).
-        gensub([E|Tail], [E|NTail]):-
-                gensub(Tail, NTail).
-        gensub([_|Tail], NTail):-
-                gensub(Tail, NTail).
 
-        % sum elements of a list
-	sum([], 0).
-	sum([H|T], S):-
-    		sum(T, N),
-    		S is N+H.
+% sum(L, N) :- sum of elements in L is equal to N
+sum_list([],0).
+sum_list([H|T],Sum) :-
+	sum_list(T,Rest),Sum is H+ Rest.
 
-        %checks if each sublist of a given list of lists, has the sum of elements S
-	check([], [], _).
-	%the LR variable here gives a warning after entering the goal
-	check([H|T], [H|LR], S):-
-		sum(H, S),
-    		!, check(T, LR, S).
-	check([_|T], LR, S):-
-    		check(T, LR, S).*/
+
+% Constrain is the sum of the subset is 0
+sumConstr(N,L) :-
+	sum_list(L,N),
+	N #= 0,
+	labeling([],L).
+
+subsetSum(L,R) :-
+	subset(L,SubL),sumConstr(N,SubL).
