@@ -160,12 +160,13 @@ schedule(TimeLst,RmLst) :- TimeLst = [A,B,C,D,E,F,G,H,I,J,K],length(TimeLst,Len)
 append(TimeLst,RmLst, W).             
 findall(L, notAtSameTime(L), C1),     
 %findall([Q1,Q2],before(Q1,Q2),C2),     
-%findall([Session,Time,Rm],at(Session,Time,Rm), C3).  
+%findall([Session,Time,Rm],at(Session,Time,Rm), C3). 
+% Add something 
 domain(TimeLst, 1,4),
 getRoom(Room,RmList),
 length(RmList,Lenm),  
 domain(RmLst,10,10+Lenm),
-domain(SessionLst,1,11),
+% Add something
 constr1(TimeLst,C1),         
 % constr2(TimeLst,C2),          
 % constr3(TimeLst,RmLst,C3),    
@@ -185,15 +186,8 @@ write(T), write(' in room '),
 write(W), write('\n'),
 myPrint(L,R,Rest).
 
-sessionmap(Session,Num).
-
-% Function to map
-
-
-
-
-% Function to compare
-
+mynth(R,L) :-
+	R = 1,!,R is R-1, mynth(R,L).
 
 constr1(TimeLst,C1) :-
 	Session = [A,B,C,D,E,F,G,H,I,J,K],
