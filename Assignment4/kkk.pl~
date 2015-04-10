@@ -149,13 +149,13 @@ findIndex(Session,[A,B,C,D,E,F,G,H,I,J,K],R) :-
 findIndex(Session,[A,B,C,D,E,F,G,H,I,J,K],R) :-
 	Session == g,!,R#=G.
 findIndex(Session,[A,B,C,D,E,F,G,H,I,J,K],R) :-
-	Session == h,!,R#=H.
+	Session == a,!,R#=A.
 findIndex(Session,[A,B,C,D,E,F,G,H,I,J,K],R) :-
-	Session == i,!,R#=I.
+	Session == a,!,R#=A.
 findIndex(Session,[A,B,C,D,E,F,G,H,I,J,K],R) :-
-	Session == j,!,R#=J.
+	Session == a,!,R#=A.
 findIndex(Session,[A,B,C,D,E,F,G,H,I,J,K],R) :-
-	Session == k,!,R#=K.
+	Session == a,!,R#=A.
 
 
 timePartition(firstDayAm,1).
@@ -164,34 +164,32 @@ timePartition(secondDayAm,3).
 timePartition(secondDayPm,4).
 timePartition(_,_).
 
-maproom(r1,1).
-maproom(r2,2).
-maproom(r3,3).
-maproom(r4,4).
-maproom(r5,5).
-maproom(r6,6).
-maproom(r7,7).
-maproom(r8,8).
-maproom(r9,9).
-maproom(r10,10).
-maproom(r11,11).
-maproom(_,_).
-
-
+sessionList(a,1).
+sessionList(b,2).
+sessionList(c,3).
+sessionList(d,4).
+sessionList(e,5).
+sessionList(f,6).
+sessionList(g,7).
+sessionList(h,8).
+sessionList(i,9).
+sessionList(j,10).
+sessionList(k,11).
+sessionList(_,_).
 
 schedule(TimeLst,RmLst) :- TimeLst = [A,B,C,D,E,F,G,H,I,J,K],length(TimeLst,Len),length(RmLst,Len),                     
 append(TimeLst,RmLst, W),             
-findall(L, notAtSameTime(L), C1),     
-findall([Q1,Q2],before(Q1,Q2),C2),
-%findall([Session,Time,Rm],at(Session,Time,Rm), C3).  
+% findall(L, notAtSameTime(L), C1),     
+findall([Q1,Q2],before(Q1,Q2),C2),     
+% findall([Session,Time,Rm],at(Session,Time,Rm), C3).  
 domain(TimeLst, 1,4),
 getRoom(Room,RmList),
 length(RmList,Lenm),
 Rlen is 10 + Lenm,  
 domain(RmLst,10,Rlen),
-constr1(TimeLst,C1),         
+% constr1(TimeLst,C1),         
 constr2(TimeLst,C2),          
-%constr3(TimeLst,RmLst,C3),    
+% constr3(TimeLst,RmLst,C3),    
 % exclusive(TimeLst,RmLst),
 labeling([],W).
 
@@ -206,29 +204,25 @@ write(T), write(' in room '),
 write(W), write('\n'),
 myPrint(L,R,Rest).
 
-constr1(TimeLst,[A,B]).
-constr1(TimeLst,C1) :-
-	C1 = [A,B|R],
-	findIndex(A,TimeLst,AS),
-	findIndex(B,TimeLst,BS),
-	AS #\= BS,
-	constr1(TimeLst,R).
+%mapFunction 
 
 
-constr2(TimeLst,[]).
-constr2(TimeLst,C2) :-
-	C2 = [[Session,Session2]|L],
-	findIndex(Session,TimeLst,I),
-	findIndex(Session2,TimeLst,J),
-	I #<J,constr2(TimeLst,L).
+% constr1(TimeLst,C1) :-
+%	labeling([],C1).
 
 
-constr3(TimeLst,RmLst,[[Session,Period,RmN]|L]) :-
-	timePartition(Period,Time),
-	findIndex(Session,TimeLst,Time),
-	maproom(RmN,Rm),
-	findIndex(Session,RmLst,Rm),
-	constr3(TimeLst,RmLst,L).
+%constr2(TimeLst,[]).
+%constr2(TimeLst,[F|C2]) :-
+%	beforeS(TimeLst,F),
+%	beforeS(TimeLst,C2).	
+
+/*constr3(TimeLst,RmLst,C3) :-
+	length(TimeLst ,Len),
+	C3 = length(X,Len),
+	TimeLst #member(TimeLst),
+	RmLst #member(RmLst),
+	labeling([],C3). */
+
 
 
 
