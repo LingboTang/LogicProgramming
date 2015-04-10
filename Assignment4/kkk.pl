@@ -157,7 +157,6 @@ findIndex(Session,[A,B,C,D,E,F,G,H,I,J,K],R) :-
 findIndex(Session,[A,B,C,D,E,F,G,H,I,J,K],R) :-
 	Session == k,!,R#=K.
 
-
 timePartition(firstDayAm,1).
 timePartition(firstDayPm,2).
 timePartition(secondDayAm,3).
@@ -181,17 +180,17 @@ maproom(_,_).
 
 schedule(TimeLst,RmLst) :- TimeLst = [A,B,C,D,E,F,G,H,I,J,K],length(TimeLst,Len),length(RmLst,Len),                     
 append(TimeLst,RmLst, W),             
-findall(L, notAtSameTime(L), C1),     
+%findall(L, notAtSameTime(L), C1),     
 findall([Q1,Q2],before(Q1,Q2),C2),
-%findall([Session,Time,Rm],at(Session,Time,Rm), C3).  
+findall([Session,Time,Rm],at(Session,Time,Rm), C3),  
 domain(TimeLst, 1,4),
 getRoom(Room,RmList),
 length(RmList,Lenm),
 Rlen is 10 + Lenm,  
 domain(RmLst,10,Rlen),
-constr1(TimeLst,C1),         
+%constr1(TimeLst,C1),         
 constr2(TimeLst,C2),          
-%constr3(TimeLst,RmLst,C3),    
+constr3(TimeLst,RmLst,C3),    
 % exclusive(TimeLst,RmLst),
 labeling([],W).
 
@@ -208,10 +207,10 @@ myPrint(L,R,Rest).
 
 constr1(TimeLst,[A,B]).
 constr1(TimeLst,C1) :-
-	C1 = [A,B|R],
-	findIndex(A,TimeLst,AS),
-	findIndex(B,TimeLst,BS),
-	AS #\= BS,
+	C1 = [[A,B]|R],
+	findIndex(A,TimeLst,S1),
+	findIndex(B,TimeLst,S2),
+	S1 #\= S2,
 	constr1(TimeLst,R).
 
 
@@ -222,8 +221,15 @@ constr2(TimeLst,C2) :-
 	findIndex(Session2,TimeLst,J),
 	I #<J,constr2(TimeLst,L).
 
+constr3(TimeLst,RmLst,C3) :-
+	C3 = [[Session,Period,RmN]],
+	timePartition(Period,Time),
+	findIndex(Session,TimeLst,Time),
+	maproom(RmN,Rm),
+	findIndex(Session,RmLst,Rm).
 
-constr3(TimeLst,RmLst,[[Session,Period,RmN]|L]) :-
+constr3(TimeLst,RmLst,C3) :-
+	C3 = [[Session,Period,RmN]|L],
 	timePartition(Period,Time),
 	findIndex(Session,TimeLst,Time),
 	maproom(RmN,Rm),
