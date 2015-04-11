@@ -123,7 +123,6 @@ query3(S,N,Type,NewMark) :-
  *	 on the constraint.
  ******************************************************************************************/
 
-
 % Get all room
 
 getRoom(Room,RmList) :- findall(Room,(room(Room)),RmList).
@@ -253,10 +252,10 @@ constr3(TimeLst,RmLst,C3) :-
 
 exclusive(TimeLst,RmLst):-
 	TimeLst = [T1,T2], RmLst = [R1,R2],
-	(T1 #\= T2) #\/ (R1 #\= R2).
+	( ((T1#=T2) #/\ (R1 #\= R2) ) #\/ (T1 #\= T2)) #\/ ((R1 #\= R2) #\/ ( (R1 #= R2) #/\ (T1 #\= T2) ) ).
 exclusive(TimeLst,RmLst):-
 	TimeLst = [T1,T2|T3], RmLst = [R1,R2|R3],
-	(T1 #\= T2) #\/ (R1 #\= R2),
+	( ((T1#=T2) #/\ (R1 #\= R2) ) #\/ (T1 #\= T2)) #\/ ((R1 #\= R2) #\/ ( (R1 #= R2) #/\ (T1 #\= T2) ) ),
 	exclusive([T1|T3],[R1|R3]), exclusive([T2|T3],[R2|R3]).
 
 
