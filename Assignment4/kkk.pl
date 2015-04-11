@@ -191,7 +191,7 @@ domain(RmLst,10,Rlen),
 constr1(TimeLst,C1),         
 constr2(TimeLst,C2),          
 constr3(TimeLst,RmLst,C3),    
-% exclusive(TimeLst,RmLst),
+exclusive(TimeLst,RmLst),
 labeling([],W),
 List = [a,b,c,d,e,f,g,h,i,j,k],
 myPrint(TimeLst,RmLst,List).
@@ -204,7 +204,8 @@ write(T), write(' in room '),
 write(W), write('\n'),
 myPrint(L,R,Rest).
 
-tc1(R) :- R = [A,B,C,D,E,F,G,H,I,J,K], domain(R,1,4), constr1(R,[a,b,c]), labeling([],R).
+tc1(T,R) :- T = [1,1,C,4,3,3,4,H,I,J,K], R = [A1,B1,C1,D1,E1,F1,G1,H1,I1,J1,K1], domain(T,1,4), domain(R,10,20), exclusive(T,R), labeling([],R).
+
 
 cc1(TimeLst,C1) :-
 	C1 = [A,B], 	
@@ -240,6 +241,16 @@ constr3(TimeLst,RmLst,C3) :-
 	maproom(RmN,Rm),
 	findIndex(Session,RmLst,Rm),
 	constr3(TimeLst,RmLst,L).
+
+exclusive(TimeLst,RmLst):-
+	TimeLst = [T1,T2], RmLst = [R1,R2],
+	(T1 #\= T2) #\/ (R1 #\= R2).
+exclusive(TimeLst,RmLst):-
+	TimeLst = [T1,T2|T3], RmLst = [R1,R2|R3],
+	(T1 #\= T2) #\/ (R1 #\= R2),
+	exclusive([T1|T3],[R1|R3]), exclusive([T2|T3],[R2|R3]).
+
+
 
 
 
