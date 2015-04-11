@@ -163,37 +163,36 @@ timePartition(secondDayAm,3).
 timePartition(secondDayPm,4).
 timePartition(_,_).
 
-maproom(r1,1).
-maproom(r2,2).
-maproom(r3,3).
-maproom(r4,4).
-maproom(r5,5).
-maproom(r6,6).
-maproom(r7,7).
-maproom(r8,8).
-maproom(r9,9).
-maproom(r10,10).
-maproom(r11,11).
+maproom(r1,10).
+maproom(r2,11).
+maproom(r3,12).
+maproom(r4,13).
+maproom(r5,14).
+maproom(r6,15).
+maproom(r7,16).
+maproom(r8,17).
+maproom(r9,18).
+maproom(r10,19).
+maproom(r11,20).
 maproom(_,_).
 
 
 
 schedule(TimeLst,RmLst) :- TimeLst = [A,B,C,D,E,F,G,H,I,J,K],length(TimeLst,Len),length(RmLst,Len),                     
 append(TimeLst,RmLst, W),             
-%findall(L, notAtSameTime(L), C1),     
+findall(L, notAtSameTime(L), C1),     
 findall([Q1,Q2],before(Q1,Q2),C2),
 findall([Session,Time,Rm],at(Session,Time,Rm), C3),  
-domain(TimeLst, 1,4),
+domain(TimeLst,1,4),
 getRoom(Room,RmList),
 length(RmList,Lenm),
-Rlen is 10 + Lenm,  
+Rlen is 9 + Lenm,  
 domain(RmLst,10,Rlen),
-%constr1(TimeLst,C1),         
+constr1(TimeLst,C1),         
 constr2(TimeLst,C2),          
 constr3(TimeLst,RmLst,C3),    
 % exclusive(TimeLst,RmLst),
-labeling([],W).
-
+labeling([],W),
 List = [a,b,c,d,e,f,g,h,i,j,k],
 myPrint(TimeLst,RmLst,List).
 
@@ -205,13 +204,25 @@ write(T), write(' in room '),
 write(W), write('\n'),
 myPrint(L,R,Rest).
 
-constr1(TimeLst,[A,B]).
+tc1(R) :- R = [A,B,C,D,E,F,G,H,I,J,K], domain(R,1,4), constr1(R,[a,b,c]), labeling([],R).
+
+cc1(TimeLst,C1) :-
+	C1 = [A,B], 	
+	findIndex(A,TimeLst,Tm),
+	findIndex(B,TimeLst,Tm2),
+	Tm #\= Tm2.
+cc1(TimeLst,C1) :-
+	C1 = [A,B|R],
+	findIndex(A,TimeLst,Tm),
+	findIndex(B,TimeLst,Tm2),
+	Tm #\= Tm2,
+	cc1(TimeLst,[A|R]), cc1(TimeLst,[B|R]).
+
+constr1(TimeLst,[]).
 constr1(TimeLst,C1) :-
-	C1 = [[A,B]|R],
-	findIndex(A,TimeLst,S1),
-	findIndex(B,TimeLst,S2),
-	S1 #\= S2,
-	constr1(TimeLst,R).
+	C1 = [A|L],
+	cc1(TimeLst,A),
+	constr1(TimeLst,L).
 
 
 constr2(TimeLst,[]).
@@ -221,13 +232,7 @@ constr2(TimeLst,C2) :-
 	findIndex(Session2,TimeLst,J),
 	I #<J,constr2(TimeLst,L).
 
-constr3(TimeLst,RmLst,C3) :-
-	C3 = [[Session,Period,RmN]],
-	timePartition(Period,Time),
-	findIndex(Session,TimeLst,Time),
-	maproom(RmN,Rm),
-	findIndex(Session,RmLst,Rm).
-
+constr3(TimeLst,RmLst,[]).
 constr3(TimeLst,RmLst,C3) :-
 	C3 = [[Session,Period,RmN]|L],
 	timePartition(Period,Time),
@@ -235,6 +240,7 @@ constr3(TimeLst,RmLst,C3) :-
 	maproom(RmN,Rm),
 	findIndex(Session,RmLst,Rm),
 	constr3(TimeLst,RmLst,L).
+
 
 
 
@@ -254,6 +260,10 @@ subset([], []).
 subset([H|T1], [H|T2]) :- subset(T1, T2).
 subset([_|T],L) :- subset(T, L).
 
+subsetSum(L,R) :- map(L,R1,_),
+	domain(R1,0,1),
+	sumequal0(L,R1),
+	labeling([ffc],R1),print(L,R1,R),checkempty(R).
 
 % sum(L, N) :- sum of elements in L is equal to N
 sum_list([],0).
