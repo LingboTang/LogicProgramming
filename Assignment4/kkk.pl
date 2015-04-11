@@ -123,13 +123,18 @@ query3(S,N,Type,NewMark) :-
  *	 on the constraint.
  ******************************************************************************************/
 
-
 room(r1).
 room(r2).
 room(r3).
-notAtSameTime([b,i,h,g]).
-before(i,j).
+room(r4).
+room(r5).
+notAtSameTime([d,g,h,k]).
+notAtSameTime([a,c]).
+before(k,d).
+before(d,j).
 at(a,_,r2).
+at(c,_,r3).
+
 
 getRoom(Room,RmList) :- findall(Room,(room(Room)),RmList).
 
@@ -204,7 +209,44 @@ write(T), write(' in room '),
 write(W), write('\n'),
 myPrint(L,R,Rest).
 
-tc1(T,R) :- T = [1,1,C,4,3,3,4,H,I,J,K], R = [A1,B1,C1,D1,E1,F1,G1,H1,I1,J1,K1], domain(T,1,4), domain(R,10,20), exclusive(T,R), labeling([],R).
+tc1(T,R) :- T = [1,1,C,4,3,3,4,H,I,J,K], R = [A1,B1,C1,D1,E1,F1,G1,H1,I1,J1,K1], domain(T,1,4),
+room(r4).
+notAtSameTime([b,c,k]).
+before(k,f).
+before(c,d).
+at(a,_,r2).
+at(d,_,r4).
+
+getRoom(Room,RmList) :- findall(Room,(room(Room)),RmList).
+
+
+findIndex(Session,[A,B,C,D,E,F,G,H,I,J,K],R) :-
+	Session == a,!,R#=A.
+findIndex(Session,[A,B,C,D,E,F,G,H,I,J,K],R) :-
+	Session == b,!,R#=B.
+findIndex(Session,[A,B,C,D,E,F,G,H,I,J,K],R) :-
+	Session == c,!,R#=C.
+findIndex(Session,[A,B,C,D,E,F,G,H,I,J,K],R) :-
+	Session == d,!,R#=D.
+findIndex(Session,[A,B,C,D,E,F,G,H,I,J,K],R) :-
+	Session == e,!,R#=E.
+findIndex(Session,[A,B,C,D,E,F,G,H,I,J,K],R) :-
+	Session == f,!,R#=F.
+findIndex(Session,[A,B,C,D,E,F,G,H,I,J,K],R) :-
+	Session == g,!,R#=G.
+findIndex(Session,[A,B,C,D,E,F,G,H,I,J,K],R) :-
+	Session == h,!,R#=H.
+findIndex(Session,[A,B,C,D,E,F,G,H,I,J,K],R) :-
+	Session == i,!,R#=I.
+findIndex(Session,[A,B,C,D,E,F,G,H,I,J,K],R) :-
+	Session == j,!,R#=J.
+findIndex(Session,[A,B,C,D,E,F,G,H,I,J,K],R) :-
+	Session == k,!,R#=K.
+
+timePartition(firstDayAm,1).
+timePartition(firstDayPm,2).
+timePartition(secondDayAm,3).
+ domain(R,10,20), exclusive(T,R), labeling([],R).
 
 
 cc1(TimeLst,C1) :-
@@ -265,35 +307,23 @@ exclusive(TimeLst,RmLst):-
  *	provide all such subsets when user asks for alternative answers.
  ***************************************************************************/
 
+subsetSum(L,R) :- map(L,R1,Map),domain(R1,0,1),
+	resultingLst(L,R1,R),notEmpty(R).
 
-% subset(X, Y) :- Y is a subset of X
-subset([], []).
-subset([H|T1], [H|T2]) :- subset(T1, T2).
-subset([_|T],L) :- subset(T, L).
+resultingLst(L,R1,R) :-
+	trickySum(L,R1,Sum,G),Sum #=0,labeling([ffc],R1),R #is G.
 
-subsetSum(L,R) :- map(L,R1,_),
-	domain(R1,0,1),
-	sumequal0(L,R1),
-	labeling([ffc],R1),print(L,R1,R),checkempty(R).
+trickySum([],[],0,[]).
+trickySum([A|CDRL],[B|CDRR],N,[A|G]):- 
+	B #\= 0,N#=N1+A*B,trickySum(CDRL,CDRR,N1,G).
+trickySum([A|CDRL],[B|CDRR],N,G) :-
+	B #= 0,trickySum(CDRL,CDRR,N,G).
 
-% sum(L, N) :- sum of elements in L is equal to N
-sum_list([],0).
-sum_list([H|T],Sum) :-
-	sum_list(T,Rest),Sum is H + Rest.
+
+notEmpty(L) :- \+ is_empty(L),!.
 
 is_empty([]).
 is_empty(L) :- L == [].
-
-% Constrain is the sum of the subset is 0
-sumConstr(N,L) :-
-	sum_list(L,N),
-	N #= 0,
-	labeling([],L).
-
-% findall
-subsetSum(L,R) :-
-	findall(Subl,(subset(L,Subl),sumConstr(N,Subl),\+ is_empty(Subl)),R).
-
 
 map(X,Y,Map):-var(Map),!,
     map_build(X,Y,Map).
@@ -310,3 +340,43 @@ map_get([A|As],[B|Bs],Map):-!,
     map_get(As,Bs,Map).
 map_get(A,B,Map):-
     member((A,B),Map),!.
+
+
+p1(R):-cputime1,!,nl,t1(R),statistics(runtime,[_,0]).
+p2(R):-cputime2,!,nl,t2(R),statistics(runtime,[_,0]).
+p3(R):-cputime3,!,nl,t3(R),statistics(runtime,[_,0]).
+p4(R):-cputime4,!,nl,t4(R),statistics(runtime,[_,0]).
+p5(R):-cputime5,!,nl,t5(R),statistics(runtime,[_,0]).
+p6(R):-cputime6,!,nl,t6(R),statistics(runtime,[_,0]).
+p7(R):-cputime7,!,nl,t7(R),statistics(runtime,[_,0]).
+p8(R):-cputime8,!,nl,t8(R),statistics(runtime,[_,0]).
+p9(R):-cputime9,!,nl,t9(R),statistics(runtime,[_,0]).
+ 
+t1(R) :- subsetSum([],R).
+t2(R) :- subsetSum([-3,1,2,3],R).
+t3(R) :- subsetSum([-1,2,3,5],R).
+t4(R) :- subsetSum([-1,2,2,3,-1,-4,-4,8,-5,-2],R).
+t5(R):-subsetSum([-3,1,2,-2,2,2,3,1,14,-15,20,-21,1,5,4,-1,-9,4,-4,9],R).
+t6(R):-subsetSum([-3,1,2,-2,2,2,3,1,14,-15,20,-21,1,5,4,-1,-9,4,-4,9,-10],R).
+t7(R):-subsetSum([-3,1,2,-2,2,2,3,1,14,-15,20,-21,1,5,4,-1,-9,4,-4,9,-10,9],R).
+t8(R):-subsetSum([-3,1,2,1,2,2,-3,14,-15,20,-21,1,5,4,-1,-9,4,-4,9,-9,9,-15,8],R).
+t9(R):-subsetSum([3,1,2,1,2,2,14,20,-520,1,5,4,6,9,4,4,9,9,8,9,23,43,56,12,34,32,45,54,90],R).
+
+cputime1:- t1(W),!,statistics(runtime,[_,X]),T is X/1000,write('run time: '),write(T), write(' sec.').
+cputime1 :- statistics(runtime,[_,X]),T is X/1000,write('run time: '),write(T), write(' sec.').
+cputime2:-t2(W),!,statistics(runtime,[_,X]),T is X/1000,write('run time: '),write(T), write(' sec.').
+cputime2 :- statistics(runtime,[_,X]),T is X/1000,write('run time: '),write(T), write(' sec.').
+cputime3 :-t3(W),!,statistics(runtime,[_,X]),T is X/1000,write('run time: '),write(T), write(' sec.').
+cputime3 :- statistics(runtime,[_,X]),T is X/1000,write('run time: '),write(T), write(' sec.').
+cputime4 :-t4(W),!,statistics(runtime,[_,X]),T is X/1000,write('run time: '),write(T), write(' sec.').
+cputime4 :- statistics(runtime,[_,X]),T is X/1000,write('run time: '),write(T), write(' sec.').
+cputime5 :-t5(W),!,statistics(runtime,[_,X]),T is X/1000,write('run time: '),write(T), write(' sec.').
+cputime5 :- statistics(runtime,[_,X]),T is X/1000,write('run time: '),write(T), write(' sec.').
+cputime6 :-t6(W),!,statistics(runtime,[_,X]),T is X/1000,write('run time: '),write(T), write(' sec.').
+cputime6 :- statistics(runtime,[_,X]),T is X/1000,write('run time: '),write(T), write(' sec.').
+cputime7 :-t7(W),!,statistics(runtime,[_,X]),T is X/1000,write('run time: '),write(T), write(' sec.').
+cputime7 :- statistics(runtime,[_,X]),T is X/1000,write('run time: '),write(T), write(' sec.').
+cputime8 :-t8(W),!,statistics(runtime,[_,X]),T is X/1000,write('run time: '),write(T), write(' sec.').
+cputime8 :- statistics(runtime,[_,X]),T is X/1000,write('run time: '),write(T), write(' sec.').
+cputime9 :-t9(W),!,statistics(runtime,[_,X]),T is X/1000,write('run time: '),write(T), write(' sec.').
+cputime9 :- statistics(runtime,[_,X]),T is X/1000,write('run time: '),write(T), write(' sec.').
