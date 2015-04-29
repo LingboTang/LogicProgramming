@@ -4,6 +4,10 @@
  Student: Lingbo Tang
 ----------------------*/
 
+/*-----------------------------------------------------------------
+  Never forget to cut off it you want to get rid of the duplication
+------------------------------------------------------------------*/
+
 
 /*-----------------------------------------------------------------
  Question 1
@@ -98,18 +102,18 @@ getridDup([],_,[]).
 % and replace A by the second car of the cdr list. M is the rest of the list.
 % [A|M] will check all A in M recursively.
 
-getridDup([A|L],M,[A|R]) :- \+ is_list(A), \+ check_in(A,M), getridDup(L,[A|M],R).
+getridDup([A|L],M,[A|R]) :- \+ is_list(A), \+ check_in(A,M),!,getridDup(L,[A|M],R).
 
 % If A is not a list, but still not inside the rest of the list, we want to find the
 % next atom we want to remove the dup.
 
-getridDup([A|L],M,R) :- \+ is_list(A), getridDup(L,M,R).
+getridDup([A|L],M,R) :- \+ is_list(A), !,getridDup(L,M,R).
 
 % If A is a list, we want to remove the "list A" at first, and then append the flattened
 % result in to the original list, this can hold the initial position and intial level of nest.
 % This is the most difficult part.
 
-getridDup([A|L],M,[B|R]) :- is_list(A), getridDup(A,M,B),hold_order(A,M,G), getridDup(L,G,R).
+getridDup([A|L],M,[B|R]) :- is_list(A), getridDup(A,M,B),hold_order(A,M,G), !,getridDup(L,G,R).
 
 
 hold_order([],L,[]).
@@ -158,8 +162,8 @@ find_smallest([A|R], L, C) :- A < C, find_smallest(R, L, A).
 find_smallest([A|R], L, C) :- find_smallest(R, L, C).
 
 generate([A],_,B).
-generate(L,Choice,N) :- Choice == smallest, flat(L,K), smallest(K,N).
-generate(L,Choice,N) :- Choice == largest, flat(L,K), largest(K,N).
+generate(L,Choice,N) :- Choice == smallest, flat(L,K), smallest(K,N),!.
+generate(L,Choice,N) :- Choice == largest, flat(L,K), largest(K,N),!.
 
 
 
@@ -176,7 +180,7 @@ generate(L,Choice,N) :- Choice == largest, flat(L,K), largest(K,N).
 	N = [[b,2],[c 2],[a,1],[e,1]]
 -------------------------------------------------------------*/
 countAll([],[]).
-countAll(L,R) :- flat(L,U),rmDup(U,G),form_pair(G,U,I),insert_sort(I,Q),reverse_it(Q,R).
+countAll(L,R) :- flat(L,U),rmDup(U,G),form_pair(G,U,I),insert_sort(I,Q),!,reverse_it(Q,R).
 
 % Form the pair, with [character,number] pattern.
 
@@ -227,7 +231,7 @@ reverse_it([H|T],L):- reverse_it(T,R),append(R,[H],L).
 
 % convert them, but we still need to flat the list.
 
-convert(L,R) :- convert_pre(L,n,K),flat(K,R).
+convert(L,R) :- convert_pre(L,n,K),flat(K,R),!.
 
 
 % append(L1,[q|L2],L),will split the list L1 before the q
